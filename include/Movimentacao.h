@@ -1,8 +1,9 @@
 #ifndef MOVIMENTACAO_H
 #define MOVIMENTACAO_H
 
-#include <ctime>
 #include <string>
+
+using namespace std;
 
 class Movimentacao{
     public:
@@ -10,13 +11,13 @@ class Movimentacao{
         Movimentacao(string descricao, char debitoCredito, double valor);
         virtual ~Movimentacao();
 
-        struct tm getDataMov() {return dataMov;};
-        string	getdDescricao() { return descricao; }
+        string getDataMov() {return dataMov;};
+        string	getDescricao() { return descricao; }
         char	getDebitoCredito() { return debitoCredito; }
         double	getValor() { return valor; }
 
     private:
-        struct tm dataMov;
+        string dataMov;
         string descricao;
         char debitoCredito;
         double valor;

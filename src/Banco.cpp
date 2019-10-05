@@ -1,5 +1,6 @@
-#include "Banco.h"
-
+#include "../include/Banco.h"
+#include <iostream>
+#include <map>
 Banco::Banco(string nomeBanco){
     setNomeBanco(nomeBanco);
 }
@@ -8,89 +9,89 @@ Banco::~Banco(){
     //dtor
 }
 
-Banco::string getNomeBanco(){
-	return nomeBanco;
-}
-
-string Banco::getNomeBanco(){
-	return nomeBanco;
-}
-
-void Banco::setNomeBanco(string val) {
-	nomeBanco = val;
-}
-
 void Banco::inserirCliente(Cliente cliente){
     clientes.insert(make_pair(cliente.getCpfCnpj(), cliente));
 }
 
-list Banco::getClientes(){
-
+map<string, Cliente> Banco::getClientes(){
+    return clientes;
 }
 
 void Banco::criarConta(Cliente cliente){
-    Conta cont(cliente);
-    contas.insert(make_pair(cont.getNumConta(), cont);
+    Conta c(cliente);
+    contas.emplace(c.getNumConta(),c);
 }
 
-unordered_map Banco::getContas(){
-
+map<int, Conta> Banco::getContas(){
+    return contas;
 }
 
 void Banco::excluiCliente(string cpf_cnpj){
-    Cliente aux = clientes.find(cpf_cnpj);
-    if( /*aux != clientes.end() && */contas.end() == contas.find(aux.getNumConta()))
+    /* Cliente aux = clientes.find(cpf_cnpj);
+    if( /*aux != clientes.end() && contas.end() == contas.find(aux.getNumConta()))
         clientes.erase(aux);
     else
-        cout << "Não existe conta relacionada ao documento de número: " << cpf_cnpj << endl;
+        cout << "Não existe conta relacionada ao documento de número: " << cpf_cnpj << endl; */
 }
 
-void Banco::excluirConta(string numConta){
+void Banco::excluirConta(int numConta){
+
     contas.erase(contas.find(numConta));
 }
 
-void Banco::depositoConta(string numConta, double valor){
-    contas.find(numConta).creditarConta(valor, "deposito");
+void Banco::depositoConta(int numConta, double valor){
+    contas.find(numConta)->second.creditarConta(valor, "deposito");
 }
 
-void Banco::saqueConta(string numConta, double valor){
-    contas.find(numConta).debitarConta(valor, "saque");
+void Banco::saqueConta(int numConta, double valor){
+    contas.find(numConta)->second.debitarConta(valor, "saque");
 }
 
-void Banco::transferenciaConta(string numContaOrigem,string numContaDestino double valor){
-    Conta origem = contas.find(numContaOrigem);
-    Conta destino = contas.find(numContaDestino);
+void Banco::transferenciaConta(int numContaOrigem,int numContaDestino, double valor){
+    Conta origem = contas.find(numContaOrigem)->second;
+    Conta destino = contas.find(numContaDestino)->second;
     if((origem.getSaldo()-valor) >= 0){
-        origem.debitarConta(valor, ("Transferência para conta " + numContaDestino + "."));
-        destino.creditarConta(valor, ("Transferência da conta " + numContaOrigem + "."))
+        origem.debitarConta(valor, ("Transferência para conta " + to_string(numContaDestino) + "."));
+        origem.setSaldo(1);
+        destino.creditarConta(valor, ("Transferência da conta " + to_string(numContaOrigem) + "."));
     }else
         cout << "Saldo insuficiente! " << endl;
 }
 
 void Banco::debitoTarifa(){
     for (pair<int, Conta> conta : contas){
-        conta.debitarConta(15, "Cobrança de tarifa");
+        conta.second.debitarConta(15, "Cobrança de tarifa");
 	}
 }
 
 void Banco::debitoCpmf(){
-
+    for (pair<int, Conta> conta : contas){
+        list<Movimentacao> mov = conta.second.extratoConta();
+        double somaDoDebito = 0;
+        for (auto & i : mov) {
+            if(i.getDebitoCredito()== 'D')
+                somaDoDebito = i.getValor();
+        }
+        conta.second.debitarConta(double((0.38*somaDoDebito)),"Cobrança de CPMF");
+	}
 }
 
-double Banco::getSaldo(string numConta){
-
+double Banco::getSaldo(int numConta){
+    return contas.find(numConta)->second.getSaldo();
 }
 
-string Banco::extratoBancario(string numConta){
-
+list<Movimentacao> Banco::extratoBancario(int numConta){
+    //TÁ ERRADO
+    return contas.find(numConta)->second.extratoConta();
 }
 
-string Banco::extratoBancario(string numConta, string dataInicio){
 
+list<Movimentacao> Banco::extratoBancario(int numConta, string dataInicio){
+    return contas.find(numConta)->second.extratoConta(dataInicio);
 }
 
-string Banco::extratoBancario(string numConta, string dataInicio, string dataFinal){
-
+list<Movimentacao> Banco::extratoBancario(int numConta, string dataInicio, string dataFinal){
+    return contas.find(numConta)->second.extratoConta(dataInicio, dataFinal);
 }
 
 void Banco::salvarDados(){

@@ -1,4 +1,9 @@
-#include "Cliente.h"
+#include "../include/Cliente.h"
+
+Cliente::Cliente()
+{
+}
+
 
 Cliente::Cliente(string nomeCliente, string cpf_cnpj, string endereco, string fone)
 {

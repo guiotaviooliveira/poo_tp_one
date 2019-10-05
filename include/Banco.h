@@ -1,12 +1,12 @@
 #ifndef BANCO_H
 #define BANCO_H
 
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <fstream>
 
-#include <Conta.h>
-#include <Cliente.h>
+#include "../include/Conta.h"
+#include "../include/Cliente.h"
 
 using namespace std;
 
@@ -18,26 +18,26 @@ class Banco {
         string 	getNomeBanco() { return nomeBanco; }
         void 	setNomeBanco(string val) { nomeBanco = val; }
         void	inserirCliente(Cliente cliente);
-        unordered_map	getClientes();
+        map<string, Cliente>	getClientes();
         void	criarConta(Cliente cliente);
-        unordered_map	getContas();
+        map<int, Conta>	getContas();
         void	excluiCliente(string cpf_cnpj);
-        void	excluirConta(string numConta);
-        void	depositoConta(string numConta, double valor);
-        void	saqueConta(string numConta, double valor);
-        void	transferenciaConta(string numContaOrigem, string numContaDestino double valor);
+        void	excluirConta(int numConta);
+        void	depositoConta(int numConta, double valor);
+        void	saqueConta(int numConta, double valor);
+        void	transferenciaConta(int numContaOrigem, int numContaDestino, double valor);
         void	debitoTarifa();
         void	debitoCpmf();
-        double	getSaldo(string numConta);
-        string	extratoBancario(string numConta);
-        string	extratoBancario(string numConta, string dataInicio);
-        string	extratoBancario(string numConta, string dataInicio, string dataFinal);
+        double	getSaldo(int numConta);
+        list<Movimentacao>	extratoBancario(int numConta);
+        list<Movimentacao>	extratoBancario(int numConta, string dataInicio);
+        list<Movimentacao>	extratoBancario(int numConta, string dataInicio, string dataFinal);
         void	salvarDados();
         void	obterDados();
     private:
         string	nomeBanco;
-        unordered_map<int, Conta> contas;
-        unordered_map<string, Cliente> clientes;
+        map<int, Conta> contas;
+        map<string, Cliente> clientes;
 };
 
 #endif // BANCO_H

@@ -3,9 +3,11 @@
 
 #include <string>
 
+using namespace std;
+
 class Cliente {
     public:
-
+        Cliente();
         Cliente(string nomeCliente, string cpf_cnpj, string endereco, string fone);
         virtual ~Cliente();
 

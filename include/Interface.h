@@ -5,8 +5,9 @@
 #include <fstream>
 #include <iostream>
 
-#include <Banco.h>
+#include "../include/Banco.h"
 
+using namespace std;
 
 class Interface {
     public:
